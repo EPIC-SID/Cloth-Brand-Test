@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initScrollReveal();
     setupSearch();
+    initParallax();
+    setupNewsletter();
 });
 
 function setupEventListeners() {
@@ -80,12 +82,26 @@ function setupEventListeners() {
 async function fetchProducts() {
     try {
         const response = await fetch(`${API_BASE}/products`);
+        if (!response.ok) throw new Error('API unreachable');
         allProducts = await response.json();
-        renderProducts(allProducts);
-        setupFilters();
     } catch (error) {
-        console.error('Fetch products error:', error);
+        console.error('Fetch products error, using fallback:', error);
+        allProducts = getFallbackProducts(); // Use local data if API fails
     }
+    renderProducts(allProducts);
+    setupFilters();
+}
+
+function getFallbackProducts() {
+    return [
+        { id: 1, name: "Midnight Silk Gown", category: "Women", price: 2450, image: "assets/gown-blue.png", description: "Italian silk gown.", sizes: ["S", "M"], colors: ["Midnight Blue", "Obsidian"] },
+        { id: 2, name: "Charcoal Tailored Suit", category: "Men", price: 3800, image: "assets/suit-charcoal.png", description: "Super 150s wool suit.", sizes: ["48", "50"], colors: ["Charcoal", "Deep Navy"] },
+        { id: 3, name: "Ivory Cashmere Sweater", category: "Women", price: 950, image: "assets/sweater-ivory.png", description: "Pure Mongolian cashmere.", sizes: ["S", "M"], colors: ["Ivory"] },
+        { id: 4, name: "Navy Velvet Blazer", category: "Men", price: 1250, image: "assets/blazer-navy.png", description: "Deep navy velvet blazer.", sizes: ["48", "50"], colors: ["Deep Navy", "Forest Green"] },
+        { id: 5, name: "Gold Accent Evening Clutch", category: "Accessories", price: 1800, image: "assets/clutch-black.png", description: "Handcrafted calfskin leather.", sizes: ["One Size"], colors: ["Gold/Black"] },
+        { id: 6, name: "Polished Calfskin Oxfords", category: "Accessories", price: 850, image: "assets/oxfords-cognac.png", description: "Masterfully crafted in Florence.", sizes: ["42", "43"], colors: ["Cognac", "Black"] },
+        { id: 7, name: "Silk Pocket Square", category: "Accessories", price: 150, image: "assets/pocket-square.png", description: "Pure Italian silk.", sizes: ["One Size"], colors: ["Champagne", "Silver"] }
+    ];
 }
 
 async function fetchFeaturedProducts() {
@@ -105,10 +121,13 @@ function renderProducts(products, containerId = 'product-grid') {
     container.innerHTML = products.map(product => `
         <div class="product-card reveal" onclick="openProductModal(${product.id})">
             <div class="product-image">
-                <img src="${API_BASE}/${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+                <img src="${API_BASE}${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
                 <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" onclick="toggleWishlist(event, ${product.id})">
                     <i class="${isWishlisted(product.id) ? 'fas' : 'far'} fa-heart"></i>
                 </button>
+                <div class="quick-view-overlay">
+                    <button class="btn-discover">Discover</button>
+                </div>
             </div>
             <div class="product-info">
                 <p class="serif" style="text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; color: #888; margin-bottom: 5px;">${product.category}</p>
@@ -164,7 +183,7 @@ function openProductModal(productId) {
     
     modalContent.innerHTML = `
         <div class="modal-left">
-            <img id="modal-main-image" src="${API_BASE}/${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+            <img id="modal-main-image" src="${API_BASE}${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
         </div>
         <div class="modal-right">
             <span class="serif" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; color: #888;">${product.category} Collection</span>
@@ -182,7 +201,19 @@ function openProductModal(productId) {
                 ${product.colors.map(color => `<div class="option-pill" onclick="selectOption(this, 'color')">${color}</div>`).join('')}
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="addToCart(${product.id})">Add to Collection</button>
+            <div style="margin: 20px 0;">
+                <button class="btn-text" onclick="toggleSizeGuide()">+ View Sizing & Fit Guide</button>
+                <div id="size-guide" style="display: none; margin-top: 15px; font-size: 0.8rem; color: #666;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #eee;"><td>Size</td><td>Chest</td><td>Waist</td></tr>
+                        <tr><td>S</td><td>36"</td><td>30"</td></tr>
+                        <tr><td>M</td><td>38"</td><td>32"</td></tr>
+                        <tr><td>L</td><td>40"</td><td>34"</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="addToCart(${product.id})">Add to Collection</button>
         </div>
     `;
 
@@ -192,6 +223,11 @@ function openProductModal(productId) {
 
 function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
+}
+
+function toggleSizeGuide() {
+    const guide = document.getElementById('size-guide');
+    guide.style.display = guide.style.display === 'none' ? 'block' : 'none';
 }
 
 function selectOption(el, type) {
@@ -204,7 +240,7 @@ function selectOption(el, type) {
         const colorName = el.innerText;
         const newImage = currentProduct.images[colorName];
         if (newImage) {
-            document.getElementById('modal-main-image').src = `${API_BASE}/${newImage}`;
+            document.getElementById('modal-main-image').src = `${API_BASE}${newImage}`;
         }
     }
 }
@@ -259,7 +295,7 @@ function renderCart() {
         <tr>
             <td>
                 <div class="cart-item">
-                    <img src="${API_BASE}/${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+                    <img src="${API_BASE}${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
                     <div>
                         <h4 class="serif">${item.name}</h4>
                         <p style="font-size: 0.8rem; color: #888;">${item.selectedSize} | ${item.selectedColor}</p>
@@ -376,21 +412,45 @@ function addChatMessage(sender, text) {
 
 // --- Wishlist Logic ---
 function toggleWishlist(e, productId) {
-    e.stopPropagation();
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
     const index = wishlist.indexOf(productId);
-    if (index > -1) {
+    const wasAdded = index === -1;
+
+    if (!wasAdded) {
         wishlist.splice(index, 1);
     } else {
         wishlist.push(productId);
+        showNotification("Item added to your curated collection.");
     }
+    
     localStorage.setItem('elan_prive_wishlist', JSON.stringify(wishlist));
     
-    // UI Update (Quick toggle class)
-    const btn = e.currentTarget;
-    btn.classList.toggle('active');
-    const icon = btn.querySelector('i');
-    icon.classList.toggle('fas');
-    icon.classList.toggle('far');
+    // UI Update
+    if (e && e.currentTarget) {
+        const btn = e.currentTarget;
+        btn.classList.toggle('active');
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fas');
+            icon.classList.toggle('far');
+        }
+    }
+}
+
+function showNotification(text) {
+    const note = document.createElement('div');
+    note.className = 'notification';
+    note.innerText = text;
+    document.body.appendChild(note);
+    setTimeout(() => note.classList.add('active'), 100);
+    setTimeout(() => {
+        note.classList.remove('active');
+        setTimeout(() => setTimeout(() => note.remove(), 500), 500);
+    }, 3000);
 }
 
 function isWishlisted(productId) {
@@ -433,13 +493,71 @@ function setupSearch() {
 // --- Scroll Reveal Logic ---
 function initScrollReveal() {
     const reveals = document.querySelectorAll('.reveal');
+    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
 
     reveals.forEach(reveal => observer.observe(reveal));
+    
+    // Quick check for elements already in view
+    reveals.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            el.classList.add('active');
+        }
+    });
+}
+
+// --- Parallax Logic ---
+function initParallax() {
+    const parallaxItems = document.querySelectorAll('.parallax');
+    window.addEventListener('scroll', () => {
+        const offset = window.pageYOffset;
+        parallaxItems.forEach(item => {
+            const speed = 0.5;
+            item.style.transform = `translateY(${offset * speed}px)`;
+        });
+    });
+}
+
+// --- Quick Reply Logic ---
+async function sendQuickReply(text) {
+    addChatMessage('user', text);
+    
+    // Simple local logic for quick replies
+    let reply = "I'll look into that for you immediately.";
+    if (text === 'Size Guide') reply = "You may view our detailed Sizing & Fit guide within any product detail page. For bespoke inquiries, our atelier remains at your disposal.";
+    if (text === 'Track My Order') reply = "Please provide your order reference (e.g., EP-12345), and I will retrieve the status of your shipment from our concierge database.";
+    if (text === 'New Arrivals') {
+        reply = "Our Autumn/Winter 2026 collection has just arrived. Shall I escort you to the New Arrivals section?";
+        setTimeout(() => window.location.href = 'shop.html', 2000);
+    }
+
+    setTimeout(() => addChatMessage('bot', reply), 600);
+}
+
+// --- Newsletter Logic ---
+function setupNewsletter() {
+    const form = document.querySelector('.newsletter-form');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = form.querySelector('input');
+        if (input.value) {
+            // Simulated success
+            const successMsg = document.createElement('p');
+            successMsg.className = 'newsletter-success';
+            successMsg.innerText = 'Welcome to the circle. A confirmation has been sent.';
+            successMsg.style.display = 'block';
+            form.after(successMsg);
+            form.style.display = 'none';
+        }
+    });
 }

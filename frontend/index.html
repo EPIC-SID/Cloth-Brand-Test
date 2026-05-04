@@ -35,15 +35,15 @@
 
     <main>
         <section class="hero">
-            <div class="hero-bg" style="background-image: url('assets/hero.png');"></div>
+            <div class="hero-bg parallax" style="background-image: url('assets/hero.png');"></div>
             <div class="hero-content">
-                <p>AUTUMN / WINTER 2026</p>
-                <h1>Crafted for Distinction. <br> Designed for You.</h1>
-                <a href="shop.html" class="btn btn-primary">Explore the Collection</a>
+                <p class="reveal">AUTUMN / WINTER 2026</p>
+                <h1 class="reveal">Crafted for Distinction. <br> Designed for You.</h1>
+                <a href="shop.html" class="btn btn-primary reveal">Explore the Collection</a>
             </div>
         </section>
 
-        <section class="featured">
+        <section class="featured reveal">
             <div class="container">
                 <div class="section-title">
                     <p>The Season's Finest</p>
@@ -58,13 +58,13 @@
             </div>
         </section>
 
-        <section class="brand-intro" style="background-color: var(--primary-color); color: white;">
+        <section class="brand-intro reveal" style="background-color: var(--primary-color); color: white;">
             <div class="container">
                 <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <span class="serif" style="color: var(--accent-color); letter-spacing: 4px; text-transform: uppercase;">Our Philosophy</span>
-                    <h2 class="serif" style="font-size: 3rem; margin: 30px 0;">Beyond Fashion, An Inheritance.</h2>
-                    <p style="color: #888; font-size: 1.1rem; margin-bottom: 40px;">Élan Privé is more than a label; it is a commitment to the timeless art of sartorial excellence. Every thread is woven with intention, every silhouette designed to command presence.</p>
-                    <a href="about.html" class="btn btn-gold">The Heritage</a>
+                    <span class="serif reveal" style="color: var(--accent-color); letter-spacing: 4px; text-transform: uppercase;">Our Philosophy</span>
+                    <h2 class="serif reveal" style="font-size: 3rem; margin: 30px 0;">Beyond Fashion, An Inheritance.</h2>
+                    <p class="reveal" style="color: #888; font-size: 1.1rem; margin-bottom: 40px;">Élan Privé is more than a label; it is a commitment to the timeless art of sartorial excellence. Every thread is woven with intention, every silhouette designed to command presence.</p>
+                    <a href="about.html" class="btn btn-gold reveal">The Heritage</a>
                 </div>
             </div>
         </section>
@@ -128,6 +128,11 @@
             <div class="message bot">
                 Greetings. I am Le Concierge, your personal Élan Privé assistant. How may I assist you in your pursuit of excellence today?
             </div>
+        </div>
+        <div class="quick-replies" id="quick-replies">
+            <button class="qr-btn" onclick="sendQuickReply('Track My Order')">Track My Order</button>
+            <button class="qr-btn" onclick="sendQuickReply('Size Guide')">Size Guide</button>
+            <button class="qr-btn" onclick="sendQuickReply('New Arrivals')">New Arrivals</button>
         </div>
         <form class="chat-input-area" id="chat-form">
             <input type="text" id="chat-input" placeholder="Type your inquiry...">
