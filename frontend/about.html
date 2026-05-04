@@ -21,6 +21,11 @@
                 </ul>
                 <div class="nav-icons">
                     <button class="icon-btn"><i class="fas fa-search"></i></button>
+                    <button class="icon-btn"><i class="far fa-user"></i></button>
+                    <button id="wishlist-trigger" class="icon-btn">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-count">0</span>
+                    </button>
                     <a href="cart.html" class="icon-btn">
                         <i class="fas fa-shopping-bag"></i>
                         <span class="cart-count">0</span>
@@ -85,6 +90,20 @@
             <input type="text" id="chat-input" placeholder="Type your inquiry...">
             <button type="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
+    </div>
+
+    <!-- Wishlist Sidebar -->
+    <div id="wishlist-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="serif">Your Wishlist</h3>
+            <button id="wishlist-close" class="icon-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="wishlist-items" class="sidebar-content">
+            <!-- Wishlist items injected here -->
+        </div>
+        <div class="sidebar-footer">
+            <a href="shop.html" class="btn btn-gold" style="width: 100%; text-align: center;">Continue Exploring</a>
+        </div>
     </div>
 
     <script src="scripts.js"></script>

@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSearch();
     initParallax();
     setupNewsletter();
+    setupWishlistEvents();
+    updateWishlistUI();
 });
 
 function setupEventListeners() {
@@ -428,16 +430,79 @@ function toggleWishlist(e, productId) {
     }
     
     localStorage.setItem('elan_prive_wishlist', JSON.stringify(wishlist));
-    
-    // UI Update
-    if (e && e.currentTarget) {
-        const btn = e.currentTarget;
-        btn.classList.toggle('active');
-        const icon = btn.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('fas');
-            icon.classList.toggle('far');
+    updateWishlistUI();
+}
+
+function updateWishlistUI() {
+    // Update all heart icons on cards
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr) {
+            const match = onclickAttr.match(/toggleWishlist\(.*,\s*(\d+)\)/);
+            if (match && match[1]) {
+                const productId = parseInt(match[1]);
+                const icon = btn.querySelector('i');
+                if (wishlist.includes(productId)) {
+                    btn.classList.add('active');
+                    if (icon) { icon.classList.add('fas'); icon.classList.remove('far'); }
+                } else {
+                    btn.classList.remove('active');
+                    if (icon) { icon.classList.remove('fas'); icon.classList.add('far'); }
+                }
+            }
         }
+    });
+
+    // Update Nav Count
+    const countElement = document.querySelector('.wishlist-count');
+    if (countElement) {
+        countElement.innerText = wishlist.length;
+        countElement.style.display = wishlist.length > 0 ? 'block' : 'none';
+    }
+
+    renderWishlist();
+}
+
+function renderWishlist() {
+    const container = document.getElementById('wishlist-items');
+    if (!container) return;
+
+    if (wishlist.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #888; margin-top: 50px;">Your collection is empty.</p>';
+        return;
+    }
+
+    const wishlistedProducts = allProducts.filter(p => wishlist.includes(p.id));
+    
+    container.innerHTML = wishlistedProducts.map(product => `
+        <div class="wishlist-item">
+            <img src="${API_BASE}${product.image}" alt="${product.name}">
+            <div class="wishlist-item-info">
+                <h4 class="serif">${product.name}</h4>
+                <p>${product.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
+                <button class="btn-text" onclick="toggleWishlist(null, ${product.id})" style="color: #ff4444; margin-top: 5px;">Remove</button>
+            </div>
+            <button class="icon-btn" onclick="openProductModal(${product.id})"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    `).join('');
+}
+
+function setupWishlistEvents() {
+    const trigger = document.getElementById('wishlist-trigger');
+    const closeBtn = document.getElementById('wishlist-close');
+    const sidebar = document.getElementById('wishlist-sidebar');
+
+    if (trigger && sidebar) {
+        trigger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            renderWishlist();
+        });
+    }
+
+    if (closeBtn && sidebar) {
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
     }
 }
 
