@@ -374,6 +374,8 @@ function setupCheckout() {
                     form.querySelector('input[name="name"]').value = data.name || '';
                     form.querySelector('input[name="email"]').value = data.email || currentUserEmail;
                     form.querySelector('input[name="address"]').value = data.address || '';
+                    if (form.querySelector('input[name="city"]')) form.querySelector('input[name="city"]').value = data.city || '';
+                    if (form.querySelector('input[name="postcode"]')) form.querySelector('input[name="postcode"]').value = data.pincode || '';
                 } else {
                     form.querySelector('input[name="email"]').value = currentUserEmail;
                 }
@@ -388,6 +390,8 @@ function setupCheckout() {
             name: formData.get('name'),
             email: formData.get('email'),
             address: formData.get('address'),
+            city: formData.get('city'),
+            pincode: formData.get('postcode'),
             cartItems: cart
         };
 
@@ -459,7 +463,9 @@ async function setupProfile() {
                 email: currentUserEmail,
                 name: document.getElementById('profile-name').value,
                 phone: document.getElementById('profile-phone').value,
-                address: document.getElementById('profile-address').value
+                address: document.getElementById('profile-address').value,
+                city: document.getElementById('profile-city').value,
+                pincode: document.getElementById('profile-pincode').value
             };
 
             try {
@@ -495,6 +501,8 @@ async function showDashboard() {
                 document.getElementById('profile-name').value = data.name || '';
                 document.getElementById('profile-phone').value = data.phone || '';
                 document.getElementById('profile-address').value = data.address || '';
+                if (document.getElementById('profile-city')) document.getElementById('profile-city').value = data.city || '';
+                if (document.getElementById('profile-pincode')) document.getElementById('profile-pincode').value = data.pincode || '';
                 if (data.name) {
                     document.getElementById('profile-greeting').innerText = `Welcome, ${data.name.split(' ')[0]}`;
                     document.getElementById('profile-initial').innerText = data.name.charAt(0).toUpperCase();

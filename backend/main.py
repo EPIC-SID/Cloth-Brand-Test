@@ -152,6 +152,8 @@ class CheckoutData(BaseModel):
     email: str
     name: str
     address: str
+    city: str = ""
+    pincode: str = ""
     cartItems: list
 
 class ProfileData(BaseModel):
@@ -159,6 +161,8 @@ class ProfileData(BaseModel):
     name: str
     address: str
     phone: str = ""
+    city: str = ""
+    pincode: str = ""
 
 @app.get("/products")
 async def get_products():
@@ -178,6 +182,8 @@ async def checkout(data: CheckoutData):
         "email": data.email,
         "name": data.name,
         "address": data.address,
+        "city": data.city,
+        "pincode": data.pincode,
         "items": data.cartItems,
         "total": sum(item['price'] * item.get('quantity', 1) for item in data.cartItems),
         "status": "Processing",
