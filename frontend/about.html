@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Heritage | Élan Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <button class="icon-btn"><i class="fas fa-search"></i></button>
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section style="padding-bottom: 0;">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+                    <p class="serif" style="text-transform: uppercase; letter-spacing: 4px; color: var(--accent-color); margin-bottom: 20px;">Est. 1924</p>
+                    <h1 class="serif" style="font-size: 4rem; margin-bottom: 40px;">The Legacy of Élan Privé</h1>
+                    <p style="font-size: 1.2rem; line-height: 2; color: #444; margin-bottom: 80px;">Born in the heart of Paris and refined across the globe, Élan Privé represents a century-long pursuit of the perfect silhouette. Our heritage is rooted in the "Atelier des Rêves," where craftsmanship meets avant-garde vision.</p>
+                </div>
+            </div>
+            <img src="assets/atelier.png" alt="Our Atelier" style="width: 100%; height: 600px; object-fit: cover;">
+        </section>
+
+        <section>
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;">
+                    <div>
+                        <h2 class="serif" style="font-size: 2.5rem; margin-bottom: 30px;">Uncompromising Craftsmanship</h2>
+                        <p style="color: #666; margin-bottom: 20px;">Every Élan Privé piece is a testament to the skill of our master artisans. From the initial sketch to the final hand-finished stitch, we honor the traditions of haute couture while embracing modern innovation.</p>
+                        <p style="color: #666;">We source only the rarest materials: silk from Como, wool from the Scottish Highlands, and leather from the finest tanneries in Tuscany. To wear Élan Privé is to wear a masterpiece.</p>
+                    </div>
+                    <div style="background-color: #f5f5f5; padding: 60px; border-radius: 4px;">
+                        <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=800" alt="Detail" style="width: 100%; height: 400px; object-fit: cover; box-shadow: 0 30px 60px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Le Concierge Chatbot -->
+    <div id="concierge-trigger">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div id="concierge-window">
+        <!-- ... same as before ... -->
+        <div class="chat-header">
+            <h3 class="serif">Le Concierge</h3>
+            <button id="chat-close" class="icon-btn" style="color: white;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Greetings. I am Le Concierge. How may I assist you today?
+            </div>
+        </div>
+        <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type your inquiry...">
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

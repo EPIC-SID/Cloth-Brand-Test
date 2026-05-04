@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Élan Privé | Crafted for Distinction</title>
+    <meta name="description" content="Discover Élan Privé, the pinnacle of luxury fashion. Exclusive collections crafted for distinction and designed for you.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <button class="icon-btn"><i class="fas fa-search"></i></button>
+                    <button class="icon-btn"><i class="far fa-user"></i></button>
+                    <button class="icon-btn"><i class="far fa-heart"></i></button>
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg" style="background-image: url('assets/hero.png');"></div>
+            <div class="hero-content">
+                <p>AUTUMN / WINTER 2026</p>
+                <h1>Crafted for Distinction. <br> Designed for You.</h1>
+                <a href="shop.html" class="btn btn-primary">Explore the Collection</a>
+            </div>
+        </section>
+
+        <section class="featured">
+            <div class="container">
+                <div class="section-title">
+                    <p>The Season's Finest</p>
+                    <h2>Featured Arrivals</h2>
+                </div>
+                <div class="product-grid" id="featured-grid">
+                    <!-- Products injected by JS -->
+                </div>
+                <div style="text-align: center; margin-top: 60px;">
+                    <a href="shop.html" class="btn btn-gold">View All Masterpieces</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="brand-intro" style="background-color: var(--primary-color); color: white;">
+            <div class="container">
+                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <span class="serif" style="color: var(--accent-color); letter-spacing: 4px; text-transform: uppercase;">Our Philosophy</span>
+                    <h2 class="serif" style="font-size: 3rem; margin: 30px 0;">Beyond Fashion, An Inheritance.</h2>
+                    <p style="color: #888; font-size: 1.1rem; margin-bottom: 40px;">Élan Privé is more than a label; it is a commitment to the timeless art of sartorial excellence. Every thread is woven with intention, every silhouette designed to command presence.</p>
+                    <a href="about.html" class="btn btn-gold">The Heritage</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 class="logo serif" style="font-size: 1.5rem; color: white;">Élan Privé</h4>
+                    <p style="color: #666; margin-top: 20px;">The pinnacle of modern luxury. Redefining elegance for the discerning individual.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Collections</h4>
+                    <ul class="footer-links">
+                        <li><a href="shop.html">Women's Couture</a></li>
+                        <li><a href="shop.html">Men's Tailoring</a></li>
+                        <li><a href="shop.html">Accessories</a></li>
+                        <li><a href="shop.html">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">The Heritage</a></li>
+                        <li><a href="contact.html">Boutiques</a></li>
+                        <li><a href="#">VIP Concierge</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p style="color: #666; font-size: 0.8rem; margin-bottom: 20px;">Join the Élan Privé circle for exclusive access to new collections and events.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="YOUR EMAIL ADDRESS">
+                        <button type="submit" class="icon-btn" style="color: var(--accent-color);"><i class="fas fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+                <div style="display: flex; gap: 30px;">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Shipping & Returns</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Le Concierge Chatbot -->
+    <div id="concierge-trigger">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div id="concierge-window">
+        <div class="chat-header">
+            <h3 class="serif">Le Concierge</h3>
+            <button id="chat-close" class="icon-btn" style="color: white;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Greetings. I am Le Concierge, your personal Élan Privé assistant. How may I assist you in your pursuit of excellence today?
+            </div>
+        </div>
+        <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type your inquiry...">
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-detail-content" style="display: flex; width: 100%;">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections | Élan Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 60px;
+            margin-top: 60px;
+        }
+        .filter-sidebar h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .filter-group {
+            margin-bottom: 40px;
+        }
+        .filter-list li {
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: #666;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-list li:hover, .filter-list li.active {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html" class="active">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <button class="icon-btn"><i class="fas fa-search"></i></button>
+                    <button class="icon-btn"><i class="far fa-user"></i></button>
+                    <button class="icon-btn"><i class="far fa-heart"></i></button>
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section style="padding: 80px 0;">
+            <div class="section-title" style="text-align: left; margin-bottom: 40px;">
+                <p>Curated Excellence</p>
+                <h2>The Collections</h2>
+            </div>
+
+            <div class="shop-layout">
+                <aside class="filter-sidebar">
+                    <div class="filter-group">
+                        <h3>Categories</h3>
+                        <ul class="filter-list">
+                            <li class="filter-btn active" data-category="All">All Collections</li>
+                            <li class="filter-btn" data-category="Women">Women's Couture</li>
+                            <li class="filter-btn" data-category="Men">Men's Tailoring</li>
+                            <li class="filter-btn" data-category="Accessories">Accessories</li>
+                        </ul>
+                    </div>
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <ul class="filter-list">
+                            <li class="price-btn" data-min="0" data-max="1000">Under $1,000</li>
+                            <li class="price-btn" data-min="1000" data-max="3000">$1,000 - $3,000</li>
+                            <li class="price-btn" data-min="3000" data-max="1000000">$3,000+</li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <div class="product-grid" id="product-grid">
+                    <!-- Products dynamically loaded -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 class="logo serif" style="font-size: 1.5rem; color: white;">Élan Privé</h4>
+                    <p style="color: #666; margin-top: 20px;">The pinnacle of modern luxury. Redefining elegance for the discerning individual.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Collections</h4>
+                    <ul class="footer-links">
+                        <li><a href="shop.html">Women's Couture</a></li>
+                        <li><a href="shop.html">Men's Tailoring</a></li>
+                        <li><a href="shop.html">Accessories</a></li>
+                        <li><a href="shop.html">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">The Heritage</a></li>
+                        <li><a href="contact.html">Boutiques</a></li>
+                        <li><a href="#">VIP Concierge</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="YOUR EMAIL ADDRESS">
+                        <button type="submit" class="icon-btn" style="color: var(--accent-color);"><i class="fas fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Le Concierge Chatbot -->
+    <div id="concierge-trigger">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div id="concierge-window">
+        <div class="chat-header">
+            <h3 class="serif">Le Concierge</h3>
+            <button id="chat-close" class="icon-btn" style="color: white;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Greetings. I am Le Concierge, your personal Élan Privé assistant. How may I assist you in your pursuit of excellence today?
+            </div>
+        </div>
+        <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type your inquiry...">
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-detail-content" style="display: flex; width: 100%;">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

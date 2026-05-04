@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Élan Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <div class="section-title">
+                <p>Secure Acquisition</p>
+                <h2>Checkout</h2>
+            </div>
+
+            <form id="checkout-form" class="checkout-grid">
+                <div>
+                    <h3 class="serif" style="margin-bottom: 30px;">Shipping Details</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <input type="text" name="address" placeholder="123 Luxury Ave, Suite 100" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" placeholder="Paris" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Postcode</label>
+                            <input type="text" placeholder="75001" required>
+                        </div>
+                    </div>
+
+                    <h3 class="serif" style="margin: 50px 0 30px;">Payment Method</h3>
+                    <div class="payment-placeholder">
+                        <p style="margin-bottom: 15px;"><i class="fab fa-stripe" style="font-size: 2rem; color: #6772e5;"></i> &nbsp; <i class="fab fa-paypal" style="font-size: 1.8rem; color: #003087;"></i></p>
+                        <p style="font-size: 0.9rem; color: #666;">Credit Card / PayPal integration placeholder.</p>
+                        <div style="margin-top: 20px; text-align: left;">
+                            <div class="form-group">
+                                <label>Card Number</label>
+                                <input type="text" placeholder="**** **** **** ****">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label>Expiry</label>
+                                    <input type="text" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="text" placeholder="***">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside>
+                    <div class="cart-summary">
+                        <h3 class="serif" style="margin-bottom: 30px; font-size: 1.5rem;">Order Review</h3>
+                        <div id="checkout-summary-list">
+                            <!-- Items injected by JS -->
+                        </div>
+                        <div class="summary-row summary-total" style="margin-top: 30px;">
+                            <span>Final Amount</span>
+                            <span id="checkout-total">$0</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 30px;">Complete Purchase</button>
+                        <p style="text-align: center; font-size: 0.7rem; color: #888; margin-top: 20px;"><i class="fas fa-lock"></i> Encrypted Secure Transaction</p>
+                    </div>
+                </aside>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

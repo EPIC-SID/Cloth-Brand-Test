@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Élan Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html" class="active">Contact Us</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <div class="section-title">
+                <p>Personalized Assistance</p>
+                <h2>Connect With Us</h2>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 100px;">
+                <div>
+                    <h3 class="serif" style="font-size: 1.8rem; margin-bottom: 40px;">Global Boutiques</h3>
+                    
+                    <div style="margin-bottom: 40px;">
+                        <h4 class="serif" style="color: var(--accent-color); margin-bottom: 10px;">Paris Flagship</h4>
+                        <p style="color: #666; font-size: 0.9rem;">24 Rue du Faubourg Saint-Honoré, <br> 75008 Paris, France</p>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 class="serif" style="color: var(--accent-color); margin-bottom: 10px;">New York Atelier</h4>
+                        <p style="color: #666; font-size: 0.9rem;">712 5th Ave, <br> New York, NY 10019, USA</p>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 class="serif" style="color: var(--accent-color); margin-bottom: 10px;">Milan Boutique</h4>
+                        <p style="color: #666; font-size: 0.9rem;">Via Montenapoleone, 27, <br> 20121 Milano MI, Italy</p>
+                    </div>
+
+                    <div style="border-top: 1px solid #eee; padding-top: 40px;">
+                        <h4 class="serif" style="margin-bottom: 15px;">VIP Concierge</h4>
+                        <p style="color: #666; font-size: 0.9rem;">Phone: +1 (800) ELAN-VIP</p>
+                        <p style="color: #666; font-size: 0.9rem;">Email: concierge@elanprive.com</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="serif" style="font-size: 1.8rem; margin-bottom: 40px;">Send an Inquiry</h3>
+                    <form id="contact-form" class="checkout-form">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="e.g. Julian Vane" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="e.g. julian@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <select>
+                                <option>General Inquiry</option>
+                                <option>Private Appointment</option>
+                                <option>Custom Tailoring</option>
+                                <option>Order Support</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea style="width: 100%; padding: 15px; border: 1px solid #ddd; outline: none; height: 150px; font-family: inherit;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Le Concierge Chatbot -->
+    <div id="concierge-trigger">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div id="concierge-window">
+        <div class="chat-header">
+            <h3 class="serif">Le Concierge</h3>
+            <button id="chat-close" class="icon-btn" style="color: white;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Greetings. How may I assist you with your inquiry today?
+            </div>
+        </div>
+        <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type your inquiry...">
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Your inquiry has been received. Our concierge will contact you shortly.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

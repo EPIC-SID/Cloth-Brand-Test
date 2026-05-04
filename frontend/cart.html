@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Collection | Élan Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo serif">Élan Privé</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="cart.html" class="icon-btn active">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <div class="section-title">
+                <p>Refine Your Selection</p>
+                <h2>Your Collection</h2>
+            </div>
+
+            <div class="checkout-grid">
+                <div>
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Masterpiece</th>
+                                <th>Investment</th>
+                                <th>Quantity</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-items-container">
+                            <!-- Items injected by JS -->
+                        </tbody>
+                    </table>
+                    <a href="shop.html" class="serif" style="text-decoration: underline; font-size: 0.9rem;">Continue Discovering</a>
+                </div>
+
+                <aside>
+                    <div class="cart-summary">
+                        <h3 class="serif" style="margin-bottom: 30px; font-size: 1.5rem;">Collection Summary</h3>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="shipping">Complimentary</span>
+                        </div>
+                        <div class="summary-row summary-total" style="margin-top: 20px;">
+                            <span>Total Investment</span>
+                            <span id="total">$0</span>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #888; margin: 20px 0;">All prices include duty and taxes.</p>
+                        <a href="checkout.html" class="btn btn-primary" style="width: 100%; text-align: center;">Proceed to Checkout</a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Élan Privé. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
