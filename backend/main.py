@@ -4,7 +4,18 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import random
 import os
+from datetime import datetime
 from google.cloud import firestore
+try:
+    from google import genai
+except ImportError:
+    genai = None
+
+# Initialize AI Client
+GEMINI_API_KEY = "AIzaSyBYba8dltxcTkfcrRsTERav2D23DzXVS1A"
+ai_client = genai.Client(api_key=GEMINI_API_KEY) if genai and GEMINI_API_KEY else None
+print(f"DEBUG: genai module loaded: {genai is not None}")
+print(f"DEBUG: AI Client initialized: {ai_client is not None}")
 
 # Initialize Firestore Client
 try:
@@ -155,8 +166,48 @@ async def get_products():
 
 @app.post("/checkout")
 async def checkout(data: CheckoutData):
-    # Mock payment processing
-    return {"status": "success", "order_id": f"EP-{random.randint(10000, 99999)}", "message": "Order placed successfully."}
+    print(f"DEBUG: Checkout attempt for {data.email}")
+    if not db:
+        print("DEBUG: Database not initialized, skipping save")
+        return {"status": "success", "order_id": f"EP-{random.randint(10000, 99999)}", "message": "Order placed (Database offline)."}
+    
+    order_id = f"EP-{random.randint(10000, 99999)}"
+    print(f"DEBUG: Saving order {order_id} to Firestore")
+    order_data = {
+        "order_id": order_id,
+        "email": data.email,
+        "name": data.name,
+        "address": data.address,
+        "items": data.cartItems,
+        "total": sum(item['price'] * item.get('quantity', 1) for item in data.cartItems),
+        "status": "Processing",
+        "date": datetime.now().isoformat()
+    }
+    
+    try:
+        # Save to 'orders' collection
+        db.collection("orders").document(order_id).set(order_data)
+        print("DEBUG: Firestore save successful")
+    except Exception as e:
+        print(f"DEBUG: Firestore save FAILED: {e}")
+    
+    return {"status": "success", "order_id": order_id, "message": "Order placed successfully."}
+
+@app.get("/orders/{email}")
+async def get_orders(email: str):
+    if not db:
+        raise HTTPException(status_code=500, detail="Database not configured")
+    
+    orders_ref = db.collection("orders").where("email", "==", email)
+    docs = orders_ref.stream()
+    
+    orders = []
+    for doc in docs:
+        orders.append(doc.to_dict())
+    
+    # Sort by date (newest first)
+    orders.sort(key=lambda x: x['date'], reverse=True)
+    return orders
 
 @app.get("/profile/{email}")
 async def get_profile(email: str):
@@ -178,9 +229,30 @@ async def save_profile(profile: ProfileData):
 
 @app.post("/chat")
 async def chat(chat_msg: ChatMessage):
-    msg = chat_msg.message.lower()
+    msg = chat_msg.message.strip()
     
-    # Le Concierge Logic
+    # Use True AI if API key is present
+    if ai_client:
+        system_prompt = """You are 'Le Concierge', the highly exclusive and refined AI luxury fashion advisor for the prestigious brand 'Élan Privé'.
+Your tone must be exceptionally sophisticated, polite, brief (under 3 sentences), and deeply knowledgeable about high fashion.
+You assist clients with styling advice, sizing, and VIP services.
+When appropriate, subtly recommend our signature pieces: 'Midnight Silk Gown', 'Charcoal Tailored Suit', or 'Navy Velvet Blazer'.
+Never break character, and never mention that you are an AI or Google model. Treat the client as a highly valued VIP."""
+        
+        try:
+            response = ai_client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=f"{system_prompt}\n\nClient inquiry: {msg}"
+            )
+            return {"reply": response.text}
+        except Exception as e:
+            print(f"Gemini AI Error: {e}")
+            with open("ai_error.log", "w") as f:
+                f.write(str(e))
+            # Fall through to keyword logic if AI fails
+
+    # Fallback Keyword Logic
+    msg_lower = msg.lower()
     responses = {
         "suit": "Our bespoke suits are crafted from Super 150s wool. Would you like to view our fitting guide for the Charcoal Tailored Suit?",
         "size": "We offer a range of sizes from European 46 to 54 for men, and XS to L for women. Our concierge can assist with precise measurements.",
@@ -193,10 +265,8 @@ async def chat(chat_msg: ChatMessage):
         "hi": "Greetings. I am Le Concierge. How may I assist you in your pursuit of excellence today?"
     }
     
-    # Default response if no keyword matches
-    default_response = "I understand. As your personal concierge, I am here to ensure your experience with Élan Privé is nothing short of exceptional. Could you please specify your inquiry regarding our collections or services?"
-    
-    response_text = next((val for key, val in responses.items() if key in msg), default_response)
+    default_response = "[DEBUG: AI FALLBACK] I understand. As your personal concierge, I am here to ensure your experience with Élan Privé is nothing short of exceptional."
+    response_text = next((val for key, val in responses.items() if key in msg_lower), default_response)
     
     return {"reply": response_text}
 

@@ -2,4 +2,6 @@ fastapi
 uvicorn
 pydantic
 python-multipart
+pydantic==2.5.3
 google-cloud-firestore
+google-genai

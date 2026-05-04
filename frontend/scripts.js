@@ -365,6 +365,22 @@ function setupCheckout() {
 
     document.getElementById('checkout-total').innerText = `$${(subtotal + (subtotal > 2000 ? 0 : 50)).toLocaleString()}`;
 
+    // Autofill if user is logged in
+    if (currentUserEmail) {
+        fetch(`${API_BASE}/profile/${currentUserEmail}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status !== 'not_found') {
+                    form.querySelector('input[name="name"]').value = data.name || '';
+                    form.querySelector('input[name="email"]').value = data.email || currentUserEmail;
+                    form.querySelector('input[name="address"]').value = data.address || '';
+                } else {
+                    form.querySelector('input[name="email"]').value = currentUserEmail;
+                }
+            })
+            .catch(err => console.error("Checkout autofill error:", err));
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
@@ -485,8 +501,54 @@ async function showDashboard() {
                 }
             }
         }
+        
+        // Fetch Order History
+        fetchOrderHistory();
     } catch (err) {
         console.error("Error fetching profile", err);
+    }
+}
+
+async function fetchOrderHistory() {
+    const container = document.getElementById('orders-container');
+    if (!container) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/orders/${currentUserEmail}`);
+        if (response.ok) {
+            const orders = await response.json();
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="color: #888;">You have no past orders.</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div style="border: 1px solid #eee; padding: 25px; border-radius: 8px; background: #fafafa;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                        <div>
+                            <span style="font-weight: bold; font-size: 1.1rem;">Order #${order.order_id}</span>
+                            <p style="font-size: 0.8rem; color: #888;">Placed on ${new Date(order.date).toLocaleDateString()}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="background: var(--accent-color); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${order.status}</span>
+                            <p style="font-weight: bold; margin-top: 5px; font-size: 1.2rem;">$${order.total.toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div>
+                        ${order.items.map(item => `
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px;">
+                                <span>${item.name} (x${item.quantity})</span>
+                                <span style="color: #666;">$${(item.price * item.quantity).toLocaleString()}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error("Order history error:", error);
+        container.innerHTML = '<p style="color: #ff4444;">Could not load order history.</p>';
     }
 }
 
