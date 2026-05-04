@@ -1,4 +1,4 @@
-const API_BASE = "";
+const API_BASE = "http://127.0.0.1:8000";
 
 // State Management
 let cart = JSON.parse(localStorage.getItem('elan_prive_cart')) || [];
@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
     } else if (path.includes('checkout.html')) {
         setupCheckout();
+    } else if (path.includes('profile.html')) {
+        setupProfile();
     } else if (path.includes('index.html') || path === '/' || path.endsWith('Test/')) {
         fetchFeaturedProducts();
     }
@@ -123,7 +125,7 @@ function renderProducts(products, containerId = 'product-grid') {
     container.innerHTML = products.map(product => `
         <div class="product-card reveal" onclick="openProductModal(${product.id})">
             <div class="product-image">
-                <img src="${API_BASE}${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+                <img src="${API_BASE}/${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
                 <button class="wishlist-btn ${isWishlisted(product.id) ? 'active' : ''}" onclick="toggleWishlist(event, ${product.id})">
                     <i class="${isWishlisted(product.id) ? 'fas' : 'far'} fa-heart"></i>
                 </button>
@@ -185,7 +187,7 @@ function openProductModal(productId) {
     
     modalContent.innerHTML = `
         <div class="modal-left">
-            <img id="modal-main-image" src="${API_BASE}${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+            <img id="modal-main-image" src="${API_BASE}/${product.image}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
         </div>
         <div class="modal-right">
             <span class="serif" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; color: #888;">${product.category} Collection</span>
@@ -242,7 +244,7 @@ function selectOption(el, type) {
         const colorName = el.innerText;
         const newImage = currentProduct.images[colorName];
         if (newImage) {
-            document.getElementById('modal-main-image').src = `${API_BASE}${newImage}`;
+            document.getElementById('modal-main-image').src = `${API_BASE}/${newImage}`;
         }
     }
 }
@@ -297,7 +299,7 @@ function renderCart() {
         <tr>
             <td>
                 <div class="cart-item">
-                    <img src="${API_BASE}${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
+                    <img src="${API_BASE}/${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1539109132304-351ae3f3ad67?auto=format&fit=crop&q=80&w=800'">
                     <div>
                         <h4 class="serif">${item.name}</h4>
                         <p style="font-size: 0.8rem; color: #888;">${item.selectedSize} | ${item.selectedColor}</p>
@@ -403,6 +405,97 @@ function setupCheckout() {
     });
 }
 
+// --- Profile & DB Logic ---
+let currentUserEmail = localStorage.getItem('elan_prive_user') || null;
+
+async function setupProfile() {
+    const authSection = document.getElementById('auth-section');
+    const profileDashboard = document.getElementById('profile-dashboard');
+    const authForm = document.getElementById('auth-form');
+    const profileForm = document.getElementById('profile-form');
+
+    if (currentUserEmail) {
+        showDashboard();
+    } else {
+        authSection.style.display = 'block';
+        profileDashboard.style.display = 'none';
+    }
+
+    if (authForm) {
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            if (email) {
+                currentUserEmail = email;
+                localStorage.setItem('elan_prive_user', email);
+                showDashboard();
+            }
+        });
+    }
+
+    if (profileForm) {
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-profile-btn');
+            btn.innerText = 'Saving...';
+            
+            const data = {
+                email: currentUserEmail,
+                name: document.getElementById('profile-name').value,
+                phone: document.getElementById('profile-phone').value,
+                address: document.getElementById('profile-address').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/profile`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    showNotification('Profile updated successfully.');
+                    document.getElementById('profile-initial').innerText = data.name ? data.name.charAt(0).toUpperCase() : 'EP';
+                }
+            } catch (err) {
+                console.error("Error saving profile", err);
+                alert("Could not connect to database.");
+            } finally {
+                btn.innerText = 'Save Changes';
+            }
+        });
+    }
+}
+
+async function showDashboard() {
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('profile-dashboard').style.display = 'grid';
+    document.getElementById('profile-email-display').innerText = currentUserEmail;
+
+    try {
+        const response = await fetch(`${API_BASE}/profile/${currentUserEmail}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.status !== 'not_found') {
+                document.getElementById('profile-name').value = data.name || '';
+                document.getElementById('profile-phone').value = data.phone || '';
+                document.getElementById('profile-address').value = data.address || '';
+                if (data.name) {
+                    document.getElementById('profile-greeting').innerText = `Welcome, ${data.name.split(' ')[0]}`;
+                    document.getElementById('profile-initial').innerText = data.name.charAt(0).toUpperCase();
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Error fetching profile", err);
+    }
+}
+
+function logout() {
+    currentUserEmail = null;
+    localStorage.removeItem('elan_prive_user');
+    window.location.reload();
+}
+
 // --- Chat Message UI Helper ---
 function addChatMessage(sender, text) {
     const msgDiv = document.createElement('div');
@@ -476,7 +569,7 @@ function renderWishlist() {
     
     container.innerHTML = wishlistedProducts.map(product => `
         <div class="wishlist-item">
-            <img src="${API_BASE}${product.image}" alt="${product.name}">
+            <img src="${API_BASE}/${product.image}" alt="${product.name}">
             <div class="wishlist-item-info">
                 <h4 class="serif">${product.name}</h4>
                 <p>${product.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>

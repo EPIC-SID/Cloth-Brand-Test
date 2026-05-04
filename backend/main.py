@@ -4,6 +4,14 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import random
 import os
+from google.cloud import firestore
+
+# Initialize Firestore Client
+try:
+    db = firestore.Client(project="robotic-facet-495106-t3")
+except Exception as e:
+    print(f"Firestore initialization warning: {e}")
+    db = None
 
 app = FastAPI(title="Élan Privé API")
 
@@ -135,6 +143,12 @@ class CheckoutData(BaseModel):
     address: str
     cartItems: list
 
+class ProfileData(BaseModel):
+    email: str
+    name: str
+    address: str
+    phone: str = ""
+
 @app.get("/products")
 async def get_products():
     return products
@@ -143,6 +157,24 @@ async def get_products():
 async def checkout(data: CheckoutData):
     # Mock payment processing
     return {"status": "success", "order_id": f"EP-{random.randint(10000, 99999)}", "message": "Order placed successfully."}
+
+@app.get("/profile/{email}")
+async def get_profile(email: str):
+    if not db:
+        raise HTTPException(status_code=500, detail="Database not configured")
+    doc_ref = db.collection("profiles").document(email)
+    doc = doc_ref.get()
+    if doc.exists:
+        return doc.to_dict()
+    return {"status": "not_found"}
+
+@app.post("/profile")
+async def save_profile(profile: ProfileData):
+    if not db:
+        raise HTTPException(status_code=500, detail="Database not configured")
+    doc_ref = db.collection("profiles").document(profile.email)
+    doc_ref.set(profile.model_dump())
+    return {"status": "success", "message": "Profile saved securely."}
 
 @app.post("/chat")
 async def chat(chat_msg: ChatMessage):
