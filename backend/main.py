@@ -4,6 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import random
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 from datetime import datetime
 from google.cloud import firestore
 try:
@@ -12,7 +16,7 @@ except ImportError:
     genai = None
 
 # Initialize AI Client
-GEMINI_API_KEY = "AIzaSyBYba8dltxcTkfcrRsTERav2D23DzXVS1A"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 ai_client = genai.Client(api_key=GEMINI_API_KEY) if genai and GEMINI_API_KEY else None
 print(f"DEBUG: genai module loaded: {genai is not None}")
 print(f"DEBUG: AI Client initialized: {ai_client is not None}")
